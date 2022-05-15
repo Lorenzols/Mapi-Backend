@@ -4,10 +4,12 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('Estas en pool');
+
+  console.log("dentro")
 });
 
 router.get('/analysis', function(req, res, next) {
-  res.send('Estas en analisi');
+  res.json({ph: 6, cl: 1})
 });
 
 router.get('/weather', function(req, res, next) {
