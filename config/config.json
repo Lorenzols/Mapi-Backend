@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "lorenzo",
-    "database": "database_development",
+    "database": "development_mapi1",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": 123456,
-    "database": "database_test",
+    "database": "test_mapi2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": 123456,
-    "database": "database_production",
+    "database": "production_mapi1",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
