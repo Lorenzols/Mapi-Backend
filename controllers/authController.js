@@ -3,30 +3,22 @@ const User = require("../models").User;
 const jwt = require("jsonwebtoken");
 
 exports.postSignin = async (req, res, next) => {
-    console.log('user: ', User)
-  const { firstName, email, password } = req.body;
-  console.log("email: ", email)
+
+  const { firstName, email, password } = req.body
+
   try {
-    const exsitUser = await User.findOne({where: { email: email }});
-    console.log("existe:", exsitUser)
+    const exsitUser = await User.findOne({where: { email: email }})
+
     if (exsitUser) {
-      const error = new Error(
-        "El email ya existe"
-      );
-      res.status(409).json({
-        error: "El email ya existe",
-      });
-      error.statusCode = 409;
-      throw error;
+      res.send({isEmail: true})
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const result = await User.create({firstName: firstName, email: email, password: hashedPassword})
-    console.log("result: ", result)
 
     res.status(200).json({
-      message: "User created",
+      message: "Usuario creado",
       user: { id: result.id, email: result.email },
     });
   } catch (err) {
@@ -45,23 +37,20 @@ exports.postLogin = async (req, res, next) => {
     const user = await User.findOne({where: { email: email }});
 
     if (!user) {
-      const error = new Error("El usuario no existe");
-      error.statusCode = 401;
-      throw error;
+      res.send({error: 'El email o la contraseña no son correctos.'})
     }
-    loadedUser = user;
 
+    loadedUser = user;
     const comparePassword = await bcrypt.compare(password, user.password);
 
     if (!comparePassword) {
-      const error = new Error("Contraseña incorrecta");
-      error.statusCode = 401;
-      throw error;
+      // 401
+      res.send({error: 'El email o la contraseña no son correctos.'})
     }
-    const token = jwt.sign({ email: loadedUser.email }, "expressnuxtsecret", {
-      expiresIn: "20m", // it will expire token after 20 minutes and if the user then refresh the page will log out
+    const token = jwt.sign({ email: loadedUser.email }, "elsecretoesmapiok", {
+      expiresIn: "20m",
     });
-    res.status(200).json({ token: token });
+    res.status(200).json({ token: token })
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -70,8 +59,7 @@ exports.postLogin = async (req, res, next) => {
   }
 };
 
-exports.getUser = (req, res, next) => { // this function will send user data to the front-end as I said above authFetch on the user object in nuxt.config.js will send a request and it will execute
-  console.log("Soy getUser")
+exports.getUser = (req, res, next) => {
   res.status(200).json({
     user: {
       id: loadedUser.id,
