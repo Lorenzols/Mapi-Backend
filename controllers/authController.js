@@ -7,14 +7,14 @@ exports.postSignin = async (req, res, next) => {
   const { firstName, email, password } = req.body;
   console.log("email: ", email)
   try {
-    const exsitUser = await User.findOne({where: { email: 'lorenzo2@gmail.com' }});
+    const exsitUser = await User.findOne({where: { email: email }});
     console.log("existe:", exsitUser)
     if (exsitUser) {
       const error = new Error(
-        "Eamil already exist, please pick another email!"
+        "El email ya existe"
       );
       res.status(409).json({
-        error: "Eamil already exist, please pick another email! ",
+        error: "El email ya existe",
       });
       error.statusCode = 409;
       throw error;
@@ -22,18 +22,12 @@ exports.postSignin = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // const user = new userModel({
-    //   firstName: firstName,
-    //   email: email,
-    //   password: hashedPassword,
-    // });
-    // const result = await user.save();
-
-    const result = await User.create({firstName: firstName, mail: email, password: hashedPassword})
+    const result = await User.create({firstName: firstName, email: email, password: hashedPassword})
+    console.log("result: ", result)
 
     res.status(200).json({
       message: "User created",
-      user: { id: result._id, email: result.email },
+      user: { id: result.id, email: result.email },
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -51,16 +45,16 @@ exports.postLogin = async (req, res, next) => {
     const user = await User.findOne({where: { email: email }});
 
     if (!user) {
-      const error = new Error("user with this email not found!");
+      const error = new Error("El usuario no existe");
       error.statusCode = 401;
       throw error;
     }
     loadedUser = user;
 
-    const comparePassword = bcrypt.compare(password, user.password);
+    const comparePassword = await bcrypt.compare(password, user.password);
 
     if (!comparePassword) {
-      const error = new Error("password is not match!");
+      const error = new Error("Contraseña incorrecta");
       error.statusCode = 401;
       throw error;
     }
@@ -77,10 +71,11 @@ exports.postLogin = async (req, res, next) => {
 };
 
 exports.getUser = (req, res, next) => { // this function will send user data to the front-end as I said above authFetch on the user object in nuxt.config.js will send a request and it will execute
+  console.log("Soy getUser")
   res.status(200).json({
     user: {
-      id: loadedUser._id,
-      fullname: loadedUser.fullname,
+      id: loadedUser.id,
+      firstName: loadedUser.firstName,
       email: loadedUser.email,
     },
   });

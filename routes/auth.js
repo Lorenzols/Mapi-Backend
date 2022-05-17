@@ -26,6 +26,6 @@ router.get('/signup', function(req, res, next) {
 
 router.post('/signup', authController.postSignin);
 router.post('/signin', authController.postLogin);
-router.get("/user", authController.getUser);
+router.get('/user', authController.getUser);
 
 module.exports = router;
