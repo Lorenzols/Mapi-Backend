@@ -12,7 +12,6 @@ require('dotenv').config()
 let models = require('./models')
 const bodyParser = require("body-parser");
 
-
 var app = express();
 
 app.use(bodyParser.json());
