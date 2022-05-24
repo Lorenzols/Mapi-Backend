@@ -29,11 +29,9 @@ router.post('/email', async function(req, res, next) {
         
 
         const transporter = nodemailer.createTransport(smtpTransport({
-            service: 'gmail',
             host: 'smtp.gmail.com',
-            port: 465,
             auth: {
-                type: "OAuth2",
+                type: "login",
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
             }
