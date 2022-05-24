@@ -60,13 +60,13 @@ router.post('/email', async function(req, res, next) {
             }
         });
 
-        const emailPort = 3000
+        const urlBaseEmail = process.env.URL_BASE || 'http://localhost:3000'
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: req.body.email,
             subject: 'Enlace para recuperar su cuenta en MaPi.',
-            text: `http://localhost:${emailPort}/resetpassword?id=${exsitUser.id}&token=${token}`
+            text: `${urlBaseEmail}/resetpassword?id=${exsitUser.id}&token=${token}`
         }
 
         transporter.sendMail(mailOptions, (err, response) => {
