@@ -48,7 +48,7 @@ exports.postLogin = async (req, res, next) => {
       res.send({error: 'El email o la contraseña no son correctos.'})
     }
     const token = jwt.sign({ email: loadedUser.email }, "elsecretoesmapiok", {
-      expiresIn: "20m",
+      expiresIn: "1h",
     });
     res.status(200).json({ token: token })
   } catch (err) {

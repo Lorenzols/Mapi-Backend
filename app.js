@@ -6,6 +6,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var poolRouter = require('./routes/pool');
 var authRouter = require('./routes/auth');
+var resetRouter = require('./routes/reset');
 
 require('dotenv').config()
 let models = require('./models')
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/pool', poolRouter);
 app.use('/auth', authRouter);
+app.use('/reset', resetRouter);
 
 
 //Sync Database
