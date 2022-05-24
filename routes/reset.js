@@ -25,6 +25,7 @@ router.post('/email', async function(req, res, next) {
         const oktoken = await exsitUser.update({
             tokenresetpassword: token
         })
+        
 
         const transporter = nodemailer.createTransport(smtpTransport({
             service: 'gmail',
@@ -33,6 +34,14 @@ router.post('/email', async function(req, res, next) {
                 pass: process.env.EMAIL_PASS
             }
         }))
+
+        transporter.verify(function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Server is ready to take our messages");
+            }
+        });
 
         const emailPort = 3000
 
