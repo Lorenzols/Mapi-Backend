@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 let smtpTransport = require('nodemailer-smtp-transport')
 let bcrypt = require('bcryptjs');
 const { is } = require('express/lib/request');
+require('dotenv').config()
 
 router.post('/email', async function(req, res, next) {
     console.log("email: ",req.body.email)
