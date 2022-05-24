@@ -3,7 +3,6 @@ var router = express.Router();
 const User = require("../models").User;
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
-const { getMaxListeners, response } = require('../app');
 let smtpTransport = require('nodemailer-smtp-transport')
 let bcrypt = require('bcryptjs');
 const { is } = require('express/lib/request');
