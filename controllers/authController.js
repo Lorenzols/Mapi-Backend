@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models").User;
+const Products = require("../models").Products;
 const jwt = require("jsonwebtoken");
 
 exports.postSignin = async (req, res, next) => {
@@ -17,10 +18,13 @@ exports.postSignin = async (req, res, next) => {
 
     const result = await User.create({firstName: firstName, email: email, password: hashedPassword})
 
+    console.log("Producto ph: ", resultProducts)
+
     res.status(200).json({
       message: "Usuario creado",
       user: { id: result.id, email: result.email },
     });
+
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
