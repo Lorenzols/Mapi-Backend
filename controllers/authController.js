@@ -10,6 +10,7 @@ exports.postSignin = async (req, res, next) => {
   try {
     const exsitUser = await User.findOne({where: { email: email }})
 
+
     if (exsitUser) {
       res.send({isEmail: true})
     }
@@ -18,8 +19,9 @@ exports.postSignin = async (req, res, next) => {
 
     const result = await User.create({firstName: firstName, email: email, password: hashedPassword})
 
-    console.log("Producto ph: ", resultProducts)
-
+    //Valores por defecto en este caso solo quiero estos dos productos
+    const pH = await Products.create({name: "pH+", appropriate_value: 7.2, fk_iduser: result.id})
+    const ppm = await Products.create({name: "ppm", appropriate_value: 1.5, fk_iduser: result.id})
     res.status(200).json({
       message: "Usuario creado",
       user: { id: result.id, email: result.email },
