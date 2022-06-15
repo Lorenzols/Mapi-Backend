@@ -36,7 +36,7 @@ router.get('/weather', isAuth, function(req, res, next) {
 
 router.get('/treatment', isAuth, async function(req, res, next) {
 
-  let poolStatus = await poolController.productsStatus().then(response => {return response})
+  let poolStatus = await poolController.productsStatus(req).then(response => {return response})
 
   let data = {
     "poolStatus": poolStatus
