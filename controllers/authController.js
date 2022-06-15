@@ -20,8 +20,8 @@ exports.postSignin = async (req, res, next) => {
     const result = await User.create({firstName: firstName, email: email, password: hashedPassword})
 
     //Valores por defecto en este caso solo quiero estos dos productos
-    const pH = await Products.create({name: "pH+", appropriate_value: 7.2, dosage_liters: 0.5, dosage_cubic_meters: 1, fk_iduser: result.id})
-    const ppm = await Products.create({name: "ppm", appropriate_value: 1.5, dosage_liters: 0.3, dosage_cubic_meters: 50, fk_iduser: result.id})
+    const pH = await Products.create({name: "pH+", appropriate_value: 7.2, dosage_recommend_ml: 300, dosage_recommend_mc: 50, fk_iduser: result.id})
+    const ppm = await Products.create({name: "ppm", appropriate_value: 1.5, dosage_recommend_ml: 25, dosage_recommend_mc: 1, fk_iduser: result.id})
     res.status(200).json({
       message: "Usuario creado",
       user: { id: result.id, email: result.email },

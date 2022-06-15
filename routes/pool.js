@@ -19,7 +19,7 @@ router.get('/analysis/', isAuth, async function(req, res, next) {
   // const r = await Products.findAll({where: {fk_iduser: req.userId}})
   // console.log("resultados:", r)
   
-  let poolStatus = await poolController.productsStatus().then(response => {return response})
+  let poolStatus = await poolController.productsStatus(req).then(response => {return response})
 
   res.send(poolStatus)
 });

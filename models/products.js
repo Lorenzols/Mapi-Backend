@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     deposit: DataTypes.FLOAT,
     appropriate_value: DataTypes.FLOAT,
-    dosage_liters: DataTypes.FLOAT,
-    dosage_cubic_meters: DataTypes.INTEGER,
+    dosage_recommend_ml: DataTypes.INTEGER,
+    dosage_recommend_mc: DataTypes.INTEGER,
     fk_iduser: DataTypes.INTEGER
   }, {
     sequelize,

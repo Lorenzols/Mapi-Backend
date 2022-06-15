@@ -1,4 +1,6 @@
 
+const Products = require("../models").Products;
+
 exports.productsStatus = async (req, res) => {
     const phList = [6.6, 6.7, 6.8, 6.9, 7, 7.2, 7.3, 7.4, 7.5, 7.6]
     const ppmList = [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5]
@@ -46,16 +48,25 @@ exports.productsStatus = async (req, res) => {
         return Math.round(m) / 100 * Math.sign(num);
     }
 
+    const r = await Products.findAll({where: {fk_iduser: req.userId}})
+    console.log("resultados:", r)
+    console.log("PHH", r[0].dataValues.dosage_recommend_ml)
+    console.log("PHH", r[1].dataValues.dosage_recommend_ml)
+
+    let phAppropriateValue = r[0].dataValues.appropriate_value
+    let ppmAppropriateValue = r[1].dataValues.appropriate_value
+
+
     //Valor de diferencia ph
-    let phDiference = roundMapi((7.4 - phValue))
+    let phDiference = roundMapi((phAppropriateValue - phValue))
 
     //valor de diferencia ppm
-    let ppmDiference = roundMapi((1 - ppmValue))
+    let ppmDiference = roundMapi((ppmAppropriateValue - ppmValue))
 
     let metersCubicsPool =  32
 
-    let phDosageRecommendMl = 300
-    let phDosageRecommendMc = 50
+    let phDosageRecommendMl = r[0].dataValues.dosage_recommend_ml
+    let phDosageRecommendMc = r[0].dataValues.dosage_recommend_mc
 
     //Se calcula la proporción de ml para subir 1 de ph
     let phDosageRatio = metersCubicsPool * phDosageRecommendMl / phDosageRecommendMc
@@ -66,8 +77,8 @@ exports.productsStatus = async (req, res) => {
     }
 
 
-    let ppmDosageRecommendMl = 25
-    let ppmDosageRecommendMc = 1
+    let ppmDosageRecommendMl = r[1].dataValues.dosage_recommend_ml
+    let ppmDosageRecommendMc = r[1].dataValues.dosage_recommend_mc
 
     //se calcula la proporción de ml para subir 1 de ppm
     let ppmDosageRatio = metersCubicsPool * ppmDosageRecommendMl / ppmDosageRecommendMc

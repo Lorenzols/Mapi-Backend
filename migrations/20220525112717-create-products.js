@@ -17,10 +17,10 @@ module.exports = {
       appropriate_value: {
         type: Sequelize.FLOAT
       },
-      dosage_liters: {
+      dosage_recommend_ml: {
         type: Sequelize.FLOAT
       },
-      dosage_cubic_meters: {
+      dosage_recommend_mc: {
         type: Sequelize.FLOAT
       },
       fk_iduser: {
