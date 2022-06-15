@@ -17,6 +17,12 @@ module.exports = {
       appropriate_value: {
         type: Sequelize.FLOAT
       },
+      dosage_liters: {
+        type: Sequelize.FLOAT
+      },
+      dosage_cubic_meters: {
+        type: Sequelize.FLOAT
+      },
       fk_iduser: {
         type: Sequelize.INTEGER,
         references: {
