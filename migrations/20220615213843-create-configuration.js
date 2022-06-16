@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       initial_treatment_time: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATE
       },
       fk_iduser: {
         type: Sequelize.INTEGER

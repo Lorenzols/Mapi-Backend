@@ -1,5 +1,6 @@
 
 const Products = require("../models").Products;
+const Configuration = require("../models").configuration;
 
 exports.productsStatus = async (req, res) => {
     const phList = [6.6, 6.7, 6.8, 6.9, 7, 7.2, 7.3, 7.4, 7.5, 7.6]
@@ -63,7 +64,9 @@ exports.productsStatus = async (req, res) => {
     //valor de diferencia ppm
     let ppmDiference = roundMapi((ppmAppropriateValue - ppmValue))
 
-    let metersCubicsPool =  32
+    const mc = await Configuration.findAll({where: {fk_iduser: req.userId}})
+    
+    let metersCubicsPool =  mc[0].dataValues.meters_cubics_pool
 
     let phDosageRecommendMl = r[0].dataValues.dosage_recommend_ml
     let phDosageRecommendMc = r[0].dataValues.dosage_recommend_mc

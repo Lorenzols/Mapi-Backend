@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models").User;
 const Products = require("../models").Products;
 const jwt = require("jsonwebtoken");
+const Configuration = require("../models").configuration;
 
 exports.postSignin = async (req, res, next) => {
 
@@ -20,8 +21,12 @@ exports.postSignin = async (req, res, next) => {
     const result = await User.create({firstName: firstName, email: email, password: hashedPassword})
 
     //Valores por defecto en este caso solo quiero estos dos productos
-    const pH = await Products.create({name: "pH+", appropriate_value: 7.2, dosage_recommend_ml: 300, dosage_recommend_mc: 50, fk_iduser: result.id})
-    const ppm = await Products.create({name: "ppm", appropriate_value: 1.5, dosage_recommend_ml: 25, dosage_recommend_mc: 1, fk_iduser: result.id})
+    const pH = await Products.create({name: "pH+", appropriate_value: 7.2, dosage_recommend_ml: 300, dosage_recommend_mc: 50, fk_iduser: result.id, deposit: 0})
+    const ppm = await Products.create({name: "ppm", appropriate_value: 1.5, dosage_recommend_ml: 25, dosage_recommend_mc: 1, fk_iduser: result.id, deposit: 0})
+
+    //valores por defecto de la configuración
+    const config = await Configuration.create({pool_location_latitud: 0, pool_location_longitud: 0, filtering_auto: false, treatment_auto: false, meters_cubics_pool: 0, initial_treatment_time: '2022-01-01T24:00:00.000Z', fk_iduser: result.id})
+
     res.status(200).json({
       message: "Usuario creado",
       user: { id: result.id, email: result.email },

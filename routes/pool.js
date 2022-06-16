@@ -5,6 +5,8 @@ const Products = require("../models").Products;
 const User = require("../models").User;
 const isAuth = require("../middleware/isAuth")
 const poolController = require("../plugins/poolController")
+const Configuration = require("../models").configuration;
+
 
 
 
@@ -79,8 +81,22 @@ router.get('/history', isAuth, function(req, res, next) {
   res.send('Estas en history');
 });
 
-router.get('/configuration', isAuth, function(req, res, next) {
-  res.send('Estas en configuration');
+router.get('/configuration', isAuth, async function(req, res, next) {
+  let result = await Configuration.findAll({where: {fk_iduser: req.userId}})
+  res.send({"configuration": result})
 });
+
+router.patch('/configuration/filtering', isAuth, async function(req, res, next) {
+  await Configuration.update({filtering_auto: req.body.check}, {where: {fk_iduser: req.userId}})
+});
+
+router.patch('/configuration/treatment', isAuth, async function(req, res, next) {
+  await Configuration.update({treatment_auto: req.body.check}, {where: {fk_iduser: req.userId}})
+});
+
+router.patch('/configuration/mc', isAuth, async function(req, res, next) {
+  await Configuration.update({meters_cubics_pool: req.body.metersCubics}, {where: {fk_iduser: req.userId}})
+});
+
 
 module.exports = router;

@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     filtering_auto: DataTypes.BOOLEAN,
     treatment_auto: DataTypes.BOOLEAN,
     meters_cubics_pool: DataTypes.INTEGER,
-    initial_treatment_time: DataTypes.DATEONLY,
+    initial_treatment_time: DataTypes.DATE,
     fk_iduser: DataTypes.INTEGER
   }, {
     sequelize,
