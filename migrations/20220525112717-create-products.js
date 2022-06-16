@@ -23,15 +23,6 @@ module.exports = {
       dosage_recommend_mc: {
         type: Sequelize.FLOAT
       },
-      fk_iduser: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'User',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

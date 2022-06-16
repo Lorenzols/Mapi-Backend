@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      time_registration.belongsTo(models.filter_engine, {foreignKey: 'fk_idfilter_engine'})
     }
   }
   time_registration.init({

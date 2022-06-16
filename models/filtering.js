@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      filtering.belongsTo(models.User, {foreignKey: 'fk_iduser'})
+      filtering.hasMany(models.days_filtering, {foreignKey: 'fk_idfiltering'})
     }
   }
   filtering.init({
