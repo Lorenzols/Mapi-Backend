@@ -1,5 +1,6 @@
 const { response } = require('express');
 var express = require('express');
+const { param } = require('express/lib/request');
 var router = express.Router();
 const Products = require("../models").Products;
 const User = require("../models").User;
@@ -96,6 +97,11 @@ router.patch('/configuration/treatment', isAuth, async function(req, res, next) 
 
 router.patch('/configuration/mc', isAuth, async function(req, res, next) {
   await Configuration.update({meters_cubics_pool: req.body.metersCubics}, {where: {fk_iduser: req.userId}})
+});
+
+router.patch('/configuration/ms/:name/:ml/:mc', isAuth, async function(req, res, next) {
+  await Products.update({dosage_recommend_ml: req.params.ml, dosage_recommend_mc: req.params.mc}, {where: {fk_iduser: req.userId, name :req.params.name}})
+  console.log("EEEAEAKK: ", req.params.name)
 });
 
 
