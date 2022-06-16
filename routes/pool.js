@@ -105,4 +105,13 @@ router.patch('/configuration/ms/:name/:ml/:mc', isAuth, async function(req, res,
 });
 
 
+router.patch('/configuration/latitud/:value', isAuth, async function(req, res, next) {
+  await Configuration.update({pool_location_latitud: req.params.value}, {where: {fk_iduser: req.userId}})
+});
+
+router.patch('/configuration/longitud/:value', isAuth, async function(req, res, next) {
+  await Configuration.update({pool_location_longitud: req.params.value}, {where: {fk_iduser: req.userId}})
+});
+
+
 module.exports = router;
