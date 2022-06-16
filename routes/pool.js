@@ -38,11 +38,37 @@ router.get('/treatment', isAuth, async function(req, res, next) {
 
   let poolStatus = await poolController.productsStatus(req).then(response => {return response})
 
+  let poolProducts = await Products.findAll( {where: {fk_iduser: req.userId}})
+
+  console.log("VALORRRR: ", poolProducts)
+
   let data = {
-    "poolStatus": poolStatus
+    "poolStatus": poolStatus,
+    "poolProducts": poolProducts
   }
 
   res.send(data);
+});
+
+router.patch('/treatment/ap', isAuth, async function(req, res, next) {
+
+  //Se obtiene el valor adecuado
+  let poolApOk = await Products.findAll({where: {fk_iduser: req.userId, name: req.body.producto}})
+  let appropriate_value = poolApOk[0].dataValues.appropriate_value
+
+  if(req.body.signo == 1){
+    appropriate_value += 0.1
+    console.log("AAA: ", appropriate_value)
+    let poolAp = await Products.update({appropriate_value: appropriate_value}, {where: {fk_iduser: req.userId, name: req.body.producto}})
+  }else{
+    appropriate_value -= 0.1
+    console.log("AAA: ", appropriate_value)
+    let poolAp = await Products.update({appropriate_value: appropriate_value}, {where: {fk_iduser: req.userId, name: req.body.producto}})
+  }
+
+  let valueOk = await Products.findAll({where: {fk_iduser: req.userId, name: req.body.producto}})
+  console.log("QQQQ: ", valueOk)
+  res.send({"valueOk": valueOk});
 });
 
 router.get('/filtering', isAuth, function(req, res, next) {
