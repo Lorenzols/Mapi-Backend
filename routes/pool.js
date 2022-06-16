@@ -53,6 +53,15 @@ router.get('/treatment', isAuth, async function(req, res, next) {
   res.send(data);
 });
 
+router.patch('/treatment/time', isAuth, async function(req, res, next) {
+
+  await Configuration.update({initial_treatment_time: `2022-01-01T${req.body.time}:00.000Z`}, {where: {fk_iduser: req.userId}})
+  // console.log("VALORRRR: ", initial_treatment_time: '2022-01-01T24:00:00.000Z')
+  console.log("VALORRRR: ", req.body.time)
+
+  res.status().send(200)
+});
+
 router.patch('/treatment/ap', isAuth, async function(req, res, next) {
 
   //Se obtiene el valor adecuado
@@ -89,28 +98,34 @@ router.get('/configuration', isAuth, async function(req, res, next) {
 
 router.patch('/configuration/filtering', isAuth, async function(req, res, next) {
   await Configuration.update({filtering_auto: req.body.check}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
 });
 
 router.patch('/configuration/treatment', isAuth, async function(req, res, next) {
   await Configuration.update({treatment_auto: req.body.check}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
 });
 
 router.patch('/configuration/mc', isAuth, async function(req, res, next) {
   await Configuration.update({meters_cubics_pool: req.body.metersCubics}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
 });
 
 router.patch('/configuration/ms/:name/:ml/:mc', isAuth, async function(req, res, next) {
   await Products.update({dosage_recommend_ml: req.params.ml, dosage_recommend_mc: req.params.mc}, {where: {fk_iduser: req.userId, name :req.params.name}})
   console.log("EEEAEAKK: ", req.params.name)
+  res.status().send(200)
 });
 
 
 router.patch('/configuration/latitud/:value', isAuth, async function(req, res, next) {
   await Configuration.update({pool_location_latitud: req.params.value}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
 });
 
 router.patch('/configuration/longitud/:value', isAuth, async function(req, res, next) {
   await Configuration.update({pool_location_longitud: req.params.value}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
 });
 
 
