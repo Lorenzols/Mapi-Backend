@@ -12,15 +12,8 @@ const Days_filtering = require("../models").days_filtering;
 const Weather = require("../models").weather;
 const axios = require("axios");
 
-/* GET users listing. */
-router.get('/', isAuth, function(req, res, next) {
-  res.send({id: req.userId});
-  console.log("dentro")
-});
-
 router.get('/analysis/', isAuth, async function(req, res, next) {
   let poolStatus = await poolController.productsStatus(req).then(response => {return response})
-
   res.send(poolStatus)
 });
 
@@ -44,7 +37,6 @@ router.get('/weather', isAuth, async function(req, res, next) {
   let lat = location.pool_location_latitud
   let lon = location.pool_location_longitud
 
-  console.log("EEEEjjEE. ", location.pool_location_latitud)
   try{
     api = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=es&appid=${keyApi}&units=metric`)
     api = api.data
@@ -53,9 +45,6 @@ router.get('/weather', isAuth, async function(req, res, next) {
     api = false
   }
   
-
-  // const result = await Weather.findAll({where: {fk_iduser: req.userId}})
-
   res.send({"tAmbient": tAmbient, "tPool": tPool, "apiweather": api});
 });
 
@@ -63,8 +52,6 @@ router.get('/treatment', isAuth, async function(req, res, next) {
 
   let poolStatus = await poolController.productsStatus(req).then(response => {return response})
   let poolProducts = await Products.findAll( {where: {fk_iduser: req.userId}})
-
-  console.log("VALORRRR: ", poolProducts)
 
   let data = {
     "poolStatus": poolStatus,
@@ -77,9 +64,6 @@ router.get('/treatment', isAuth, async function(req, res, next) {
 router.patch('/treatment/time', isAuth, async function(req, res, next) {
 
   await Configuration.update({initial_treatment_time: `2022-01-01T${req.body.time}:00.000Z`}, {where: {fk_iduser: req.userId}})
-  // console.log("VALORRRR: ", initial_treatment_time: '2022-01-01T24:00:00.000Z')
-  console.log("VALORRRR: ", req.body.time)
-
   res.status().send(200)
 });
 
@@ -91,23 +75,19 @@ router.patch('/treatment/ap', isAuth, async function(req, res, next) {
 
   if(req.body.signo == 1){
     appropriate_value += 0.1
-    console.log("AAA: ", appropriate_value)
     let poolAp = await Products.update({appropriate_value: appropriate_value}, {where: {fk_iduser: req.userId, name: req.body.producto}})
   }else{
     appropriate_value -= 0.1
-    console.log("AAA: ", appropriate_value)
     let poolAp = await Products.update({appropriate_value: appropriate_value}, {where: {fk_iduser: req.userId, name: req.body.producto}})
   }
 
   let valueOk = await Products.findAll({where: {fk_iduser: req.userId, name: req.body.producto}})
-  console.log("QQQQ: ", valueOk)
   res.send({"valueOk": valueOk});
 });
 
 
 router.get('/filtering', isAuth, async function(req, res, next) {
   const filter = await Filtering.findAll({where: {fk_iduser: req.userId}})
-  console.log("Fil todo: ", filter)
   res.send({"filter": filter})
 });
 
@@ -178,8 +158,6 @@ router.patch('/filtering/days/sunday/:value', isAuth, async function(req, res, n
   res.status().send(200)
 });
 
-
-
 router.get('/history', isAuth, function(req, res, next) {
   res.send('Estas en history');
 });
@@ -206,7 +184,6 @@ router.patch('/configuration/mc', isAuth, async function(req, res, next) {
 
 router.patch('/configuration/ms/:name/:ml/:mc', isAuth, async function(req, res, next) {
   await Products.update({dosage_recommend_ml: req.params.ml, dosage_recommend_mc: req.params.mc}, {where: {fk_iduser: req.userId, name :req.params.name}})
-  console.log("EEEAEAKK: ", req.params.name)
   res.status().send(200)
 });
 

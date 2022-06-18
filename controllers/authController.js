@@ -13,7 +13,6 @@ exports.postSignin = async (req, res, next) => {
   try {
     const exsitUser = await User.findOne({where: { email: email }})
 
-
     if (exsitUser) {
       res.send({isEmail: true})
     }
@@ -34,8 +33,6 @@ exports.postSignin = async (req, res, next) => {
 
     // Valores por defecto dias de filtrado
     const filterData = await Filtering.findAll({where: {fk_iduser: result.id}})
-    // console.log("DATOS FILTRADO: ", filterData[0].dataValues.id)
-
     const daysFilter = await Days_filtering.create({monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false, fk_idfiltering: filterData[0].dataValues.id})
 
     res.status(200).json({

@@ -1,4 +1,3 @@
-
 const Products = require("../models").Products;
 const Configuration = require("../models").configuration;
 
@@ -20,13 +19,10 @@ exports.productsStatus = async (req, res) => {
 
     if(phValue > 7.6){
         phStatus = "Alto"
-        console.log("Alto")
     }if (phValue < 7.4) {
         phStatus = "Bajo"
-        console.log("Bajo")
     } else {
         phStatus = "Normal"
-        console.log("Normal")
     }
 
     //Estado del ppm
@@ -34,13 +30,10 @@ exports.productsStatus = async (req, res) => {
     
     if(ppmValue > 1.5){
         ppmStatus = "Alto"
-        console.log("Alto")
     }if (ppmValue < 1) {
         ppmStatus = "Bajo"
-        console.log("Bajo")
     } else {
         ppmStatus = "Normal"
-        console.log("Normal")
     }
 
     //Para redondear numeros
@@ -50,9 +43,6 @@ exports.productsStatus = async (req, res) => {
     }
 
     const r = await Products.findAll({where: {fk_iduser: req.userId}})
-    console.log("resultados:", r)
-    console.log("PHH", r[0].dataValues.dosage_recommend_ml)
-    console.log("PHH", r[1].dataValues.dosage_recommend_ml)
 
     let phAppropriateValue = r[0].dataValues.appropriate_value
     let ppmAppropriateValue = r[1].dataValues.appropriate_value
