@@ -3,6 +3,8 @@ const User = require("../models").User;
 const Products = require("../models").Products;
 const jwt = require("jsonwebtoken");
 const Configuration = require("../models").configuration;
+const Filtering = require("../models").filtering;
+const Days_filtering = require("../models").days_filtering;
 
 exports.postSignin = async (req, res, next) => {
 
@@ -26,6 +28,15 @@ exports.postSignin = async (req, res, next) => {
 
     //valores por defecto de la configuración
     const config = await Configuration.create({pool_location_latitud: 0, pool_location_longitud: 0, filtering_auto: false, treatment_auto: false, meters_cubics_pool: 0, initial_treatment_time: '2022-01-01T24:00:00.000Z', fk_iduser: result.id})
+
+    //VAlores por defecto filtrado
+    const filter = await Filtering.create({time_on: '2022-01-01T01:00:00.000Z',time_off: '2022-01-01T06:00:00.000Z',fk_iduser: result.id})
+
+    // Valores por defecto dias de filtrado
+    const filterData = await Filtering.findAll({where: {fk_iduser: result.id}})
+    // console.log("DATOS FILTRADO: ", filterData[0].dataValues.id)
+
+    const daysFilter = await Days_filtering.create({monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false, fk_idfiltering: filterData[0].dataValues.id})
 
     res.status(200).json({
       message: "Usuario creado",

@@ -7,9 +7,8 @@ const User = require("../models").User;
 const isAuth = require("../middleware/isAuth")
 const poolController = require("../plugins/poolController")
 const Configuration = require("../models").configuration;
-
-
-
+const Filtering = require("../models").filtering;
+const Days_filtering = require("../models").days_filtering;
 
 /* GET users listing. */
 router.get('/', isAuth, function(req, res, next) {
@@ -18,10 +17,6 @@ router.get('/', isAuth, function(req, res, next) {
 });
 
 router.get('/analysis/', isAuth, async function(req, res, next) {
-
-  // const r = await Products.findAll({where: {fk_iduser: req.userId}})
-  // console.log("resultados:", r)
-  
   let poolStatus = await poolController.productsStatus(req).then(response => {return response})
 
   res.send(poolStatus)
@@ -83,9 +78,81 @@ router.patch('/treatment/ap', isAuth, async function(req, res, next) {
   res.send({"valueOk": valueOk});
 });
 
-router.get('/filtering', isAuth, function(req, res, next) {
-  res.send('Estas en filtering');
+
+router.get('/filtering', isAuth, async function(req, res, next) {
+  const filter = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  console.log("Fil todo: ", filter)
+  res.send({"filter": filter})
 });
+
+router.patch('/filtering/on', isAuth, async function(req, res, next) {
+  await Filtering.update({time_on: `2022-01-01T${req.body.time}:00.000Z`}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/off', isAuth, async function(req, res, next) {
+  await Filtering.update({time_off: `2022-01-01T${req.body.time}:00.000Z`}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
+});
+
+//Peticiones para saber los dias de filtrado y modificarlos
+router.get('/filtering/days', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  const days = await Days_filtering.findAll({where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.send({"days": days})
+});
+
+router.patch('/filtering/days/monday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({monday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/days/tuesday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({tuesday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/days/wednesday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({wednesday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/days/thursday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({thursday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/days/friday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({friday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/days/saturday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({saturday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+router.patch('/filtering/days/sunday/:value', isAuth, async function(req, res, next) {
+
+  const filterData = await Filtering.findAll({where: {fk_iduser: req.userId}})
+  await Days_filtering.update({sunday: req.params.value}, {where: {fk_idfiltering: filterData[0].dataValues.id}})
+  res.status().send(200)
+});
+
+
 
 router.get('/history', isAuth, function(req, res, next) {
   res.send('Estas en history');
@@ -125,6 +192,11 @@ router.patch('/configuration/latitud/:value', isAuth, async function(req, res, n
 
 router.patch('/configuration/longitud/:value', isAuth, async function(req, res, next) {
   await Configuration.update({pool_location_longitud: req.params.value}, {where: {fk_iduser: req.userId}})
+  res.status().send(200)
+});
+
+router.patch('/user/:name', isAuth, async function(req, res, next) {
+  await User.update({firstName: req.params.name}, {where: {id: req.userId}})
   res.status().send(200)
 });
 
