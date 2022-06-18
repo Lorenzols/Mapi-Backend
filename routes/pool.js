@@ -9,6 +9,8 @@ const poolController = require("../plugins/poolController")
 const Configuration = require("../models").configuration;
 const Filtering = require("../models").filtering;
 const Days_filtering = require("../models").days_filtering;
+const Weather = require("../models").weather;
+const axios = require("axios");
 
 /* GET users listing. */
 router.get('/', isAuth, function(req, res, next) {
@@ -22,20 +24,44 @@ router.get('/analysis/', isAuth, async function(req, res, next) {
   res.send(poolStatus)
 });
 
-router.post('/analysis', isAuth, async function(req, res, next) {
-  // const resultProducts = await Products.create({name: req.body.name, appropriate_value: req.body.value, fk_iduser: req.body.user_id})
-  // console.log("PRODUCTOS: ", resultProducts)
-  res.json({ph: 6, cl: 1})
-});
+router.get('/weather', isAuth, async function(req, res, next) {
+  const tempAmbient = [34, 35, 36, 37, 38 ,39]
+  const tempPool = [16, 17, 18, 19]
+  const keyApi = "591fd86cbfc504a6385d497fad3f3347"
 
-router.get('/weather', isAuth, function(req, res, next) {
-  res.send('Estas en weather');
+  function tRandom(list) {
+    let a = Math.floor(Math.random() * list.length)
+    return list[a]
+  }
+
+  let tAmbient = tRandom(tempAmbient)
+  let tPool = tRandom(tempPool)
+  let api = {}
+
+  let configt = await Configuration.findAll({where: {fk_iduser: req.userId}})
+  let location = configt[0].dataValues
+
+  let lat = location.pool_location_latitud
+  let lon = location.pool_location_longitud
+
+  console.log("EEEEjjEE. ", location.pool_location_latitud)
+  try{
+    api = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=es&appid=${keyApi}&units=metric`)
+    api = api.data
+  
+  }catch(err){
+    api = false
+  }
+  
+
+  // const result = await Weather.findAll({where: {fk_iduser: req.userId}})
+
+  res.send({"tAmbient": tAmbient, "tPool": tPool, "apiweather": api});
 });
 
 router.get('/treatment', isAuth, async function(req, res, next) {
 
   let poolStatus = await poolController.productsStatus(req).then(response => {return response})
-
   let poolProducts = await Products.findAll( {where: {fk_iduser: req.userId}})
 
   console.log("VALORRRR: ", poolProducts)
