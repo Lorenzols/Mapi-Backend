@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models").User;
 
+//Se encarga de comprobar si el usuario esta registrado
 module.exports = async (req, res, next) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
@@ -8,7 +9,6 @@ module.exports = async (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
-  console.log("HEADER: ", authHeader)
   const token = authHeader.split(" ")[1];
 
   let decodedToken;

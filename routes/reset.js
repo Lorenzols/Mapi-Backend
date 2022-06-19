@@ -9,8 +9,8 @@ const { is } = require('express/lib/request');
 require('dotenv').config()
 const { google } = require('googleapis')
 
+//Se va a enviar un correo con el enlace para cambiar la contraseña
 router.post('/email', async function(req, res, next) {
-    console.log("email: ",req.body.email)
 
     try {
         const oAuth2Client = new google.auth.OAuth2(
@@ -85,7 +85,7 @@ router.post('/email', async function(req, res, next) {
     }    
 });
 
-
+//Se reciba la contraseña y se cambia
 router.put('/password', async function(req, res, next) {
 
     const hashedPassword = await bcrypt.hash(req.body.password, 12)
